@@ -1,0 +1,1759 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "GameInCome",
+        "description": "Description of API accessor methods for GameInCome",
+        "contact": {
+            "name": "Support",
+            "email": "karlossan@me.com"
+        },
+        "license": {
+            "name": "License 1.0 (Demo)",
+            "url": "L5_SWAGGER_CONST_HOST"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://game-back.test/api/v1",
+            "description": "Production API Server"
+        },
+        {
+            "url": "https://game-back.karlossan.com/api/v1",
+            "description": "Stage API Server"
+        }
+    ],
+    "paths": {
+        "/auth/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "login in system",
+                "operationId": "auth-login",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LoginResource"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - Произошла ошибка во время входа, попробуйте перезагрузить страницу, если ошибка остаётся, то обратитесь в поддержку, Спасибо!"
+                    },
+                    "401": {
+                        "description": "Unauthenticated - Вы ввели неверные данные, попробуйте снова!"
+                    },
+                    "403": {
+                        "description": "Forbidden - Нет прав для выполнения запроса"
+                    },
+                    "404": {
+                        "description": "Resource Not Found"
+                    }
+                }
+            }
+        },
+        "/auth/socialite/vk/connect": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "login/registration in system",
+                "operationId": "auth-socialite-vk",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "error"
+                    }
+                }
+            }
+        },
+        "/auth/registration": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "validates an account",
+                "operationId": "registration",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "surname",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "error"
+                    }
+                }
+            }
+        },
+        "/auth/accept-email": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "validates an account",
+                "operationId": "accept-email",
+                "parameters": [
+                    {
+                        "name": "code",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "hash",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "error"
+                    }
+                }
+            }
+        },
+        "/auth/accept-ip": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "validates an account",
+                "operationId": "accept-id",
+                "parameters": [
+                    {
+                        "name": "hash",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "error"
+                    }
+                }
+            }
+        },
+        "/auth/change-password/hash-send": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "validates an account",
+                "operationId": "auth-change-password-hash-send",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "error"
+                    }
+                }
+            }
+        },
+        "/auth/change-password/hash-check": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "validates an account",
+                "operationId": "auth-change-password-hash-check",
+                "parameters": [
+                    {
+                        "name": "hash",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "error"
+                    }
+                }
+            }
+        },
+        "/cart/buy": {
+            "post": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "buy from cart",
+                "operationId": "cart-buy",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/BuyRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BuyResource"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - Произошла ошибка: Способ оплаты временно недоступен, попробуйте перезагрузить страницу, если ошибка остаётся, то обратитесь в поддержку, Спасибо!"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden - Нет прав для выполнения запроса"
+                    },
+                    "404": {
+                        "description": "Resource Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/personal-area/appeals/{appealType}": {
+            "get": {
+                "tags": [
+                    "Personal Area: Appeals"
+                ],
+                "summary": "Personal Area Appeals",
+                "operationId": "personal_area_appeals",
+                "parameters": [
+                    {
+                        "name": "appealType",
+                        "in": "path",
+                        "description": "general / dispute / partnership / tech-support",
+                        "required": true,
+                        "example": "general"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ShowAppealsResource"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - Произошла ошибка: Способ оплаты временно недоступен, попробуйте перезагрузить страницу, если ошибка остаётся, то обратитесь в поддержку, Спасибо!"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden - Нет прав для выполнения запроса"
+                    },
+                    "404": {
+                        "description": "Resource Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Personal Area: Appeals"
+                ],
+                "summary": "Create Appeals",
+                "operationId": "personal_area_appeals_create",
+                "parameters": [
+                    {
+                        "name": "appealType",
+                        "in": "path",
+                        "description": "general / dispute / partnership / tech-support",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateAppealsRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    },
+                    "400": {
+                        "description": "Error: Bad Request"
+                    },
+                    "401": {
+                        "description": "Error: Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Error: Forbidden / Недостаточно прав для выполнения запроса"
+                    },
+                    "404": {
+                        "description": "Error: Resource Not Found"
+                    },
+                    "409": {
+                        "description": "Error: Conflict / Не указаны или указаны некорректно обязательные для запроса dispute параметры: itemType и keyId"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/personal-area/appeals/{appealType}/{appealId}/messages": {
+            "get": {
+                "tags": [
+                    "Personal Area: Appeals"
+                ],
+                "summary": "Personal Area Appeal Messages",
+                "operationId": "personal_area_appeals_messages",
+                "parameters": [
+                    {
+                        "name": "appealType",
+                        "in": "path",
+                        "description": "general / dispute / partnership / tech-support",
+                        "required": true
+                    },
+                    {
+                        "name": "appealId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ShowAppealMessagesResource"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - Произошла ошибка: Способ оплаты временно недоступен, попробуйте перезагрузить страницу, если ошибка остаётся, то обратитесь в поддержку, Спасибо!"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden - Нет прав для выполнения запроса"
+                    },
+                    "404": {
+                        "description": "Resource Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/personal-area/appeals/{appealType}/{appealId}/message": {
+            "post": {
+                "tags": [
+                    "Personal Area: Appeals"
+                ],
+                "summary": "Create Appeals message",
+                "operationId": "personal_area_appeals_create_message",
+                "parameters": [
+                    {
+                        "name": "appealType",
+                        "in": "path",
+                        "description": "general / dispute / partnership / tech-support",
+                        "required": true
+                    },
+                    {
+                        "name": "appealId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateMessageAppealsRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ShowAppealMessagesResource"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error: Bad Request"
+                    },
+                    "401": {
+                        "description": "Error: Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Error: Forbidden / Недостаточно прав для выполнения запроса"
+                    },
+                    "404": {
+                        "description": "Error: Resource Not Found"
+                    },
+                    "409": {
+                        "description": "Error: Conflict / Не указаны или указаны некорректно обязательные для запроса dispute параметры: itemType и id"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/personal-area/finance/balance": {
+            "get": {
+                "tags": [
+                    "Personal Area: Finance"
+                ],
+                "summary": "Personal Area Finance",
+                "operationId": "personal_area_finance_balance",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BalanceResource"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - Произошла ошибка: Способ оплаты временно недоступен, попробуйте перезагрузить страницу, если ошибка остаётся, то обратитесь в поддержку, Спасибо!"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden - Нет прав для выполнения запроса"
+                    },
+                    "404": {
+                        "description": "Resource Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/personal-area/finance/transactions": {
+            "get": {
+                "tags": [
+                    "Personal Area: Finance"
+                ],
+                "summary": "Personal Area Finance",
+                "operationId": "personal_area_finance_transactions",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TransactionsResource"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden / Недостаточно прав для выполнения запроса"
+                    },
+                    "404": {
+                        "description": "Resource Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/personal-area/finance/promo-code/{name}/activate": {
+            "post": {
+                "tags": [
+                    "Personal Area: Finance"
+                ],
+                "summary": "Personal Area Finance",
+                "operationId": "personal_area_finance_promo_code_activate",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden / Недостаточно прав для выполнения запроса"
+                    },
+                    "404": {
+                        "description": "Resource Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/personal-area/purchases/{itemType}": {
+            "get": {
+                "tags": [
+                    "Personal Area: Purchases"
+                ],
+                "summary": "get purchases",
+                "operationId": "purchases",
+                "parameters": [
+                    {
+                        "name": "itemType",
+                        "in": "path",
+                        "description": "games / software / swiches / cases",
+                        "required": true,
+                        "example": "games"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PurchaseResource"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden - Недостаточно прав для выполнения запроса"
+                    },
+                    "404": {
+                        "description": "Resource Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/personal-area/purchases/{itemType}/{keyId}": {
+            "get": {
+                "tags": [
+                    "Personal Area: Purchases"
+                ],
+                "summary": "get purchase",
+                "operationId": "purchase",
+                "parameters": [
+                    {
+                        "name": "itemType",
+                        "in": "path",
+                        "description": "games / software / swiches / cases",
+                        "required": true,
+                        "example": "games"
+                    },
+                    {
+                        "name": "keyId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/KeyPurchaseResource"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden - Недостаточно прав для выполнения запроса"
+                    },
+                    "404": {
+                        "description": "Resource Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/personal-area/sales/{itemType}": {
+            "get": {
+                "tags": [
+                    "Personal Area: Sales"
+                ],
+                "summary": "get items",
+                "operationId": "sales",
+                "parameters": [
+                    {
+                        "name": "itemType",
+                        "in": "path",
+                        "description": "games / software / swiches / cases",
+                        "required": true,
+                        "example": "games"
+                    },
+                    {
+                        "name": "state",
+                        "in": "query",
+                        "description": "bought / archived",
+                        "required": false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SaleResource"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden - Недостаточно прав для выполнения запроса"
+                    },
+                    "404": {
+                        "description": "Resource Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Personal Area: Sales"
+                ],
+                "summary": "TODO create items",
+                "operationId": "sales_create",
+                "parameters": [
+                    {
+                        "name": "itemType",
+                        "in": "path",
+                        "description": "games / software / swiches / cases",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Error: Bad Request"
+                    },
+                    "401": {
+                        "description": "Error: Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Error: Forbidden / Недостаточно прав для выполнения запроса"
+                    },
+                    "404": {
+                        "description": "Error: Resource Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/personal-area/sales/{itemType}/{itemId}": {
+            "put": {
+                "tags": [
+                    "Personal Area: Sales"
+                ],
+                "summary": "update items",
+                "operationId": "sales_update",
+                "parameters": [
+                    {
+                        "name": "itemType",
+                        "in": "path",
+                        "description": "games / software / swiches / cases",
+                        "required": true
+                    },
+                    {
+                        "name": "itemId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SalesUpdateRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Personal Area: Sales"
+                ],
+                "summary": "delete items",
+                "operationId": "sales_delete",
+                "parameters": [
+                    {
+                        "name": "itemType",
+                        "in": "path",
+                        "description": "games / software / swiches / cases",
+                        "required": true
+                    },
+                    {
+                        "name": "itemId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/socialite/vk/connect": {
+            "get": {
+                "tags": [
+                    "Socialite"
+                ],
+                "summary": "validates an account",
+                "operationId": "auth-socialite-vk-connect",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "error"
+                    }
+                }
+            }
+        },
+        "/socialite/vk/redirect": {
+            "get": {
+                "tags": [
+                    "Socialite"
+                ],
+                "summary": "validates an account",
+                "operationId": "auth-socialite-vk-redirect",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "error"
+                    }
+                }
+            }
+        },
+        "/socialite/vk/save-user": {
+            "post": {
+                "tags": [
+                    "Socialite"
+                ],
+                "summary": "validates an account",
+                "operationId": "auth-socialite-vk-save-user",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "error"
+                    }
+                }
+            }
+        },
+        "/authorization/login": {
+            "post": {
+                "tags": [
+                    "OLD_Authentication & Authorization"
+                ],
+                "summary": "validates an account",
+                "operationId": "login",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "201": {
+                        "description": "Вы ввели неверные данные, попробуйте снова!"
+                    },
+                    "400": {
+                        "description": "Произошла ошибка во время входа, личный токен не был сгенерирован, попробуйте перезагрузить страницу, если ошибка остаётся, то обратитесь в поддержку, Спасибо!"
+                    }
+                }
+            }
+        },
+        "/authorization/registration": {
+            "post": {
+                "tags": [
+                    "OLD_Registration"
+                ],
+                "summary": "validates an account",
+                "operationId": "registration",
+                "parameters": [
+                    {
+                        "name": "first_name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "last_name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Произошла ошибка во время первого этапа регистрации, попробуйте зарегистрироваться ещё раз, если ошибка остаётся, то обратитесь в поддержку, Спасибо!"
+                    }
+                }
+            }
+        },
+        "/authorization/accept-email": {
+            "post": {
+                "tags": [
+                    "OLD_Registration"
+                ],
+                "summary": "validates an account",
+                "operationId": "accept-email",
+                "parameters": [
+                    {
+                        "name": "code",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "hash",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "error"
+                    }
+                }
+            }
+        },
+        "/authorization/accept-ip/hash/{hash}": {
+            "get": {
+                "tags": [
+                    "OLD_Registration"
+                ],
+                "summary": "validates an account",
+                "operationId": "authorization-accept-ip",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "error"
+                    }
+                }
+            }
+        },
+        "/send-link-for-change-password": {
+            "get": {
+                "tags": [
+                    "OLD_Registration"
+                ],
+                "summary": "validates an account",
+                "operationId": "send-link-for-change-password",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "error"
+                    }
+                }
+            }
+        },
+        "/change-password/hash/{hash}": {
+            "get": {
+                "tags": [
+                    "OLD_Registration"
+                ],
+                "summary": "validates an account",
+                "operationId": "send-link-for-change-password",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "error"
+                    }
+                }
+            }
+        },
+        "/authorization/login/socialite/vk": {
+            "get": {
+                "tags": [
+                    "OLD_Authentication & Authorization"
+                ],
+                "summary": "validates an account",
+                "operationId": "registration-socialite-vk",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "error"
+                    }
+                }
+            }
+        },
+        "/authorization/registration/socialite/vk": {
+            "get": {
+                "tags": [
+                    "OLD_Registration"
+                ],
+                "summary": "validates an account",
+                "operationId": "registration-socialite-vk",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "error"
+                    }
+                }
+            }
+        },
+        "/authorization/vk-redirect": {
+            "get": {
+                "tags": [
+                    "OLD_Registration"
+                ],
+                "summary": "validates an account",
+                "operationId": "registration-socialite-vk-save-user",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "error"
+                    }
+                }
+            }
+        },
+        "/authorization/registration/socialite/vk/save-user": {
+            "post": {
+                "tags": [
+                    "OLD_Registration"
+                ],
+                "summary": "validates an account",
+                "operationId": "registration-socialite-vk-save-user",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "error"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "LoginRequest": {
+                "required": [
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "example": "mail@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "example": "password"
+                    }
+                },
+                "type": "object"
+            },
+            "BuyRequest": {
+                "properties": {
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "keyId": {
+                                    "type": "string"
+                                },
+                                "itemType": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "paymentMethod": {
+                        "description": "parameters: balance, card",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "SalesRequest": {
+                "properties": {
+                    "state": {
+                        "description": "parameters: bought, archived",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "SalesUpdateRequest": {
+                "properties": {
+                    "archive": {
+                        "type": "boolean"
+                    }
+                },
+                "type": "object"
+            },
+            "CreateAppealsRequest": {
+                "required": [
+                    "theme",
+                    "text"
+                ],
+                "properties": {
+                    "theme": {
+                        "type": "string"
+                    },
+                    "text": {
+                        "type": "string"
+                    },
+                    "itemType": {
+                        "description": "Only for disputes: games / software / swiches / cases",
+                        "type": "string",
+                        "example": null
+                    },
+                    "keyId": {
+                        "description": "Only for disputes",
+                        "type": "string",
+                        "example": null
+                    },
+                    "image": {
+                        "description": "Only for disputes not required",
+                        "type": "image",
+                        "example": null
+                    }
+                },
+                "type": "object"
+            },
+            "CreateMessageAppealsRequest": {
+                "required": [
+                    "theme",
+                    "text"
+                ],
+                "properties": {
+                    "text": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "CreateDisputeRequest": {
+                "required": [
+                    "text"
+                ],
+                "properties": {
+                    "text": {
+                        "type": "string"
+                    },
+                    "image": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "LoginResource": {
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/User"
+                    },
+                    "token": {
+                        "type": "string",
+                        "example": "33|KZWs57tnsROVvPTHqqzqAAN2iy2eYwIGXld4h8vd"
+                    },
+                    "status": {
+                        "type": "integer",
+                        "example": "200"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "LoginResource"
+                }
+            },
+            "BuyResource": {
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "name": {
+                                    "type": "string"
+                                },
+                                "background": {
+                                    "type": "string"
+                                },
+                                "sellerNickname": {
+                                    "type": "string"
+                                },
+                                "key": {
+                                    "type": "string"
+                                },
+                                "price": {
+                                    "type": "number"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "status": {
+                        "type": "integer",
+                        "example": "200"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "LoginResource"
+                }
+            },
+            "ShowAppealMessagesResource": {
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "userName": {
+                                    "type": "string"
+                                },
+                                "userSurname": {
+                                    "type": "string"
+                                },
+                                "userAvatar": {
+                                    "type": "string"
+                                },
+                                "text": {
+                                    "type": "string"
+                                },
+                                "image": {
+                                    "type": "string"
+                                },
+                                "isAdmin": {
+                                    "type": "boolean"
+                                },
+                                "createdAt": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "status": {
+                        "type": "integer",
+                        "example": "200"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "ShowAppealMessagesResource"
+                }
+            },
+            "ShowAppealsResource": {
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "appealId": {
+                                    "type": "string"
+                                },
+                                "appealNumber": {
+                                    "type": "number"
+                                },
+                                "appealTheme": {
+                                    "type": "string"
+                                },
+                                "appealAnswered": {
+                                    "type": "string"
+                                },
+                                "appealClosedAt": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "status": {
+                        "type": "integer",
+                        "example": "200"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "ShowAppealsResource"
+                }
+            },
+            "BalanceResource": {
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/UserBalance"
+                    },
+                    "status": {
+                        "type": "integer",
+                        "example": "200"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "BalanceResource"
+                }
+            },
+            "TransactionsResource": {
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Transaction"
+                        }
+                    },
+                    "status": {
+                        "type": "integer",
+                        "example": "200"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "TransactionsResource"
+                }
+            },
+            "KeyPurchaseResource": {
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "itemName": {
+                                    "type": "string"
+                                },
+                                "itemBackground": {
+                                    "type": "string"
+                                },
+                                "price": {
+                                    "type": "number"
+                                },
+                                "keyId": {
+                                    "type": "string"
+                                },
+                                "key": {
+                                    "type": "string"
+                                },
+                                "sellerId": {
+                                    "type": "string"
+                                },
+                                "sellerName": {
+                                    "type": "string"
+                                },
+                                "sellerSurname": {
+                                    "type": "string"
+                                },
+                                "sellerNickname": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "status": {
+                        "type": "integer",
+                        "example": "200"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "KeyPurchaseResource"
+                }
+            },
+            "PurchaseResource": {
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "purchaseId": {
+                                    "type": "string"
+                                },
+                                "keyId": {
+                                    "type": "string"
+                                },
+                                "key": {
+                                    "type": "string"
+                                },
+                                "itemName": {
+                                    "type": "string"
+                                },
+                                "itemBackground": {
+                                    "type": "string"
+                                },
+                                "itemPlatform": {
+                                    "type": "string"
+                                },
+                                "createdAt": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "status": {
+                        "type": "integer",
+                        "example": "200"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "PurchaseResource"
+                }
+            },
+            "SaleResource": {
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "itemId": {
+                                    "type": "string"
+                                },
+                                "itemName": {
+                                    "type": "string"
+                                },
+                                "itemService": {
+                                    "type": "string"
+                                },
+                                "platformId": {
+                                    "type": "string"
+                                },
+                                "itemHeaderImage": {
+                                    "type": "string"
+                                },
+                                "oldPrice": {
+                                    "type": "number"
+                                },
+                                "newPrice": {
+                                    "type": "number"
+                                },
+                                "sale": {
+                                    "type": "number"
+                                },
+                                "keyId": {
+                                    "type": "string"
+                                },
+                                "itemCreatedAt": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "status": {
+                        "type": "integer",
+                        "example": "200"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "LoginResource"
+                }
+            },
+            "User": {
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "0e2090f0-d1da-4e55-ad25-0af0d2e85036"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "surname": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "nickname": {
+                        "type": "string"
+                    },
+                    "avatar": {
+                        "type": "string",
+                        "format": "url",
+                        "example": "https://example.com/avatar.jpg"
+                    },
+                    "balance": {
+                        "$ref": "#/components/schemas/UserBalance"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "User"
+                }
+            },
+            "Transaction": {
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "product": {
+                        "type": "string"
+                    },
+                    "product_id": {
+                        "type": "string"
+                    },
+                    "item_type": {
+                        "type": "string"
+                    },
+                    "key_id": {
+                        "type": "string"
+                    },
+                    "operation": {
+                        "type": "string"
+                    },
+                    "action": {
+                        "type": "boolean"
+                    },
+                    "amount": {
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "type": "string"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Transaction"
+                }
+            },
+            "UserBalance": {
+                "properties": {
+                    "overallBalance": {
+                        "type": "integer"
+                    },
+                    "pendingBalance": {
+                        "type": "integer"
+                    },
+                    "availableBalance": {
+                        "type": "integer"
+                    },
+                    "blockingBalance": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "UserBalance"
+                }
+            }
+        },
+        "securitySchemes": {
+            "bearer_token": {
+                "type": "apiKey",
+                "description": "Enter token in format (Bearer 35|a7aabf6c23d1...)",
+                "name": "Authorization",
+                "in": "header"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "API Endpoints of authentication & authorization & registration"
+        },
+        {
+            "name": "Cart",
+            "description": "API Endpoints of cart"
+        },
+        {
+            "name": "Personal Area: Purchases",
+            "description": "API Endpoints of personal area"
+        },
+        {
+            "name": "Personal Area: Sales",
+            "description": "API Endpoints of personal area"
+        },
+        {
+            "name": "Personal Area: Finance",
+            "description": "API Endpoints of personal area"
+        },
+        {
+            "name": "Personal Area: Appeals",
+            "description": "API Endpoints of personal area"
+        },
+        {
+            "name": "Socialite",
+            "description": "API Endpoints of socialite"
+        },
+        {
+            "name": "OLD_Authentication & Authorization",
+            "description": "API Endpoints of authentication and authorization"
+        },
+        {
+            "name": "OLD_Registration",
+            "description": "API Endpoints of registration"
+        }
+    ],
+    "security": [
+        []
+    ]
+}
