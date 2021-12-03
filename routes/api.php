@@ -136,7 +136,7 @@ Route::prefix('authorization')->group(function () {
     });
 
     Route::prefix('/login')->group(function (){
-        Route::get('/', [LoginController::class, 'login'])->middleware('throttle:70,10')->name('login');
+        Route::get('/', [LoginController::class, 'login'])->middleware('throttle:70,10')->name('old.login');
         Route::prefix('/socialite')->group(function (){
             Route::prefix('/vk')->group(function (){
                 Route::get('/', [VkControllerLogin::class, 'connect'])->middleware('throttle:50,10');

@@ -22,10 +22,10 @@ use App\Models\User\PersonalArea\Finance\UserBalance;
 use App\Models\User\Verify\UserVerifyEmail;
 use App\Http\Services\CheckingUserDeviceInputParameters\DefineDeviceService;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use Laravel\Sanctum\PersonalAccessToken;
 use OpenApi\Annotations as OA;
 
@@ -93,7 +93,8 @@ class AuthController extends Controller
         try {
             $user = User::where('email', $request->email)->first();
             if ($user == null || !Hash::check($request->password, $user->password)) {
-                return response()->json(['warning' => 'Вы ввели неверные данные, попробуйте снова!', 'status' => 401], 401);
+                return response()->json(['warning' => 'Вы ввели неверные данные, попробуйте снова!', 'status' => 401],
+                    401);
             }
 
             //Нашли данного пользователя и идём проверять данные в сервисе об его устройстве и IP
@@ -117,14 +118,18 @@ class AuthController extends Controller
             $token = $user->createToken('token')->plainTextToken;
             //   Log::info($user->createToken('token')->plainTextToken);
             if ($token == null) {
-                return response()->json(['error' => 'Произошла ошибка во время входа, личный токен не был сгенерирован, попробуйте перезагрузить страницу, если ошибка остаётся, то обратитесь в поддержку, Спасибо!',
-                    'status' => 400], 400);
+                return response()->json([
+                    'error' => 'Произошла ошибка во время входа, личный токен не был сгенерирован, попробуйте перезагрузить страницу, если ошибка остаётся, то обратитесь в поддержку, Спасибо!',
+                    'status' => 400,
+                ], 400);
             }
 
             return (new LoginResource($user->load('balance')))->additional(['token' => $token, 'status' => 200]);
         } catch (\Throwable) {
-            return response()->json(['error' => 'Произошла ошибка во время входа, попробуйте перезагрузить страницу, если ошибка остаётся, то обратитесь в поддержку, Спасибо!',
-                'status' => 400], 400);
+            return response()->json([
+                'error' => 'Произошла ошибка во время входа, попробуйте перезагрузить страницу, если ошибка остаётся, то обратитесь в поддержку, Спасибо!',
+                'status' => 400,
+            ], 400);
         }
     }
 
@@ -201,11 +206,17 @@ class AuthController extends Controller
 
             SendCode::dispatch($randCode, $request->email);
 
-            return response()->json(['email' => $request->email, 'hash' => $userVerify->hash,
-                'status' => 200], 200);
-        } catch (\Throwable) {
-            return response()->json(['error' => 'Произошла ошибка во время первого этапа регистрации, попробуйте зарегистрироваться ещё раз, если ошибка остаётся, то обратитесь в поддержку, Спасибо!',
-                'status' => 400], 400);
+            return response()->json([
+                'email' => $request->email,
+                'hash' => $userVerify->hash,
+                'status' => 200,
+            ], 200);
+        } catch (Exception $ex) {
+            return response()->json([
+                'error' => 'Произошла ошибка во время первого этапа регистрации, попробуйте зарегистрироваться ещё раз, если ошибка остаётся, то обратитесь в поддержку, Спасибо!',
+                'status' => 400,
+                'debug' => $ex->getMessage(),
+            ], 400);
         }
     }
 
@@ -242,8 +253,10 @@ class AuthController extends Controller
             $accept = UserVerifyEmail::where(['code' => $request->code, 'hash' => $request->hash])->first();
 
             if ($accept == null) {
-                return response()->json(['warning' => 'Вы ввели неверный код, попробуйте еще раз!',
-                    'status' => 400], 400);
+                return response()->json([
+                    'warning' => 'Вы ввели неверный код, попробуйте еще раз!',
+                    'status' => 400,
+                ], 400);
             }
 
             /*
@@ -254,8 +267,10 @@ class AuthController extends Controller
                 //Берём информацию о девайсе и IP пользователя
                 $aboutDevice = $this->deviceInfo->getInfoAboutDevice();
             } catch (\Throwable) {
-                return response()->json(['error' => 'Произошла ошибка при определении устройства, пожалуйста, попробуйте зайти на сайт с другого устройтсва, если ошибка остаётся, то обратитесь в поддержку, Спасибо!',
-                    'status' => 400], 400);
+                return response()->json([
+                    'error' => 'Произошла ошибка при определении устройства, пожалуйста, попробуйте зайти на сайт с другого устройтсва, если ошибка остаётся, то обратитесь в поддержку, Спасибо!',
+                    'status' => 400,
+                ], 400);
             }
 
 
@@ -289,11 +304,16 @@ class AuthController extends Controller
                 UserVerifyEmail::where('user_email', $accept->user_email)->delete();
             });
 
-            return (new UserResource($this->user))->additional(['token' => $this->token->plainTextToken, 'code' => $request->code,
-                'status' => 201]);
+            return (new UserResource($this->user))->additional([
+                'token' => $this->token->plainTextToken,
+                'code' => $request->code,
+                'status' => 201,
+            ]);
         } catch (\Throwable) {
-            return response()->json(['error' => 'Произошла ошибка во время второго этапа регистрации, попробуйте зарегистрироваться ещё раз, если ошибка остаётся, то обратитесь в поддержку, Спасибо!',
-                'status' => 400], 400);
+            return response()->json([
+                'error' => 'Произошла ошибка во время второго этапа регистрации, попробуйте зарегистрироваться ещё раз, если ошибка остаётся, то обратитесь в поддержку, Спасибо!',
+                'status' => 400,
+            ], 400);
         }
     }
 
@@ -304,8 +324,10 @@ class AuthController extends Controller
             $user = User::where(['id' => $request->id, 'email' => $request->email, 'code' => $request->code])->first();
 
             if ($user === null) {
-                return response()->json(['warning' => 'Пользователя, которому вы устанавливаете никнейм не существует!',
-                    'status' => 400], 400);
+                return response()->json([
+                    'warning' => 'Пользователя, которому вы устанавливаете никнейм не существует!',
+                    'status' => 400,
+                ], 400);
             }
 
             $user->nickname = $request->nickname;
@@ -313,8 +335,10 @@ class AuthController extends Controller
 
             return new UserResource($user->load('balance'));
         } catch (\Throwable) {
-            return response()->json(['error' => 'Произошла ошибка во время установки никнейма, попробуйте войти на сайт, так как ваш аккаунт был уже зарегистрирован, если ошибка остаётся, то обратитесь в поддержку, Спасибо!',
-                'status' => 400], 400);
+            return response()->json([
+                'error' => 'Произошла ошибка во время установки никнейма, попробуйте войти на сайт, так как ваш аккаунт был уже зарегистрирован, если ошибка остаётся, то обратитесь в поддержку, Спасибо!',
+                'status' => 400,
+            ], 400);
         }
     }
 
@@ -346,14 +370,18 @@ class AuthController extends Controller
             //Ищем в пока не подтверждённых записях запись с новыми IP/устройстве для подтверждения по hash из ссылки письма
             $userIp = UserIp::query()->where(['hash' => $hash, 'token_id' => null, 'confirmed' => 0])->first();
             if ($userIp == null) {
-                return response()->json(['warning' => 'Не удалось найти ваш IP/устройство в списке ожидающих подтверждения, попробуйте перезагрузить страницу, если ошибка остаётся, то обратитесь в поддержку, Спасибо!',
-                    'status' => 400], 400);
+                return response()->json([
+                    'warning' => 'Не удалось найти ваш IP/устройство в списке ожидающих подтверждения, попробуйте перезагрузить страницу, если ошибка остаётся, то обратитесь в поддержку, Спасибо!',
+                    'status' => 400,
+                ], 400);
             }
 
             $user = User::query()->find($userIp->user_id);
             if ($user == null) {
-                return response()->json(['warning' => 'Не удалось найти аккаунт, вероятно ошибка на сервере, попробуйте перезагрузить страницу, если ошибка остаётся, то обратитесь в поддержку, Спасибо!',
-                    'status' => 400], 400);
+                return response()->json([
+                    'warning' => 'Не удалось найти аккаунт, вероятно ошибка на сервере, попробуйте перезагрузить страницу, если ошибка остаётся, то обратитесь в поддержку, Спасибо!',
+                    'status' => 400,
+                ], 400);
             }
 
             $token = $user->createToken('token');
@@ -361,17 +389,19 @@ class AuthController extends Controller
             $userIp->update([
                 'confirmed' => 1,
                 'confirmed_at' => Carbon::now('Europe/Moscow')->toDateTimeString(),
-                'token_id' => $token->accessToken->id
+                'token_id' => $token->accessToken->id,
             ]);
 
             return (new UserResource($user))->additional([
                 'token' => $token->plainTextToken,
                 'message' => 'Вы успешно подтвердили новые входные данные! Сейчас мы вас перенаправим на главную страницу.',
-                'status' => 200
+                'status' => 200,
             ]);
         } catch (\Throwable) {
-            return response()->json(['error' => 'Произошла ошибка во время подтверждения новых данных, попробуйте перезагрузить страницу, если ошибка остаётся, то обратитесь в поддержку, Спасибо!',
-                'status' => 400], 400);
+            return response()->json([
+                'error' => 'Произошла ошибка во время подтверждения новых данных, попробуйте перезагрузить страницу, если ошибка остаётся, то обратитесь в поддержку, Спасибо!',
+                'status' => 400,
+            ], 400);
         }
     }
 
@@ -406,8 +436,10 @@ class AuthController extends Controller
 
             $user = User::query()->where('email', $email)->first();
             if ($user == null) {
-                return response()->json(['warning' => 'Пользователя с данным email не существует!',
-                    'status' => 400], 400);
+                return response()->json([
+                    'warning' => 'Пользователя с данным email не существует!',
+                    'status' => 400,
+                ], 400);
             }
 
             $hash = hash("sha256", $time . $email . rand(0, 99), false);
@@ -419,11 +451,15 @@ class AuthController extends Controller
 
             SendChangePasswordLink::dispatch($email, $hash);
 
-            return response()->json(['message' => 'На ваш Email отправлено письмо!',
-                'status' => 200], 200);
+            return response()->json([
+                'message' => 'На ваш Email отправлено письмо!',
+                'status' => 200,
+            ], 200);
         } catch (\Throwable) {
-            return response()->json(['error' => 'Произошла ошибка во время отправки письма для восстановления пароля, попробуйте перезагрузить страницу, если ошибка остаётся, то обратитесь в поддержку, Спасибо!',
-                'status' => 400], 400);
+            return response()->json([
+                'error' => 'Произошла ошибка во время отправки письма для восстановления пароля, попробуйте перезагрузить страницу, если ошибка остаётся, то обратитесь в поддержку, Спасибо!',
+                'status' => 400,
+            ], 400);
         }
     }
 
@@ -450,43 +486,42 @@ class AuthController extends Controller
      */
     public function changePasswordOnMailLink($hash, PasswordRequest $request): JsonResponse
     {
-        try
-        {
+        try {
             //Ищем в таблице временных изменений и новых аккаунтов запись по hash, для которой нужно изменить пароль,
             //а затем удалить
             $userVerifyEmail = UserVerifyEmail::query()->where('hash', $hash)->first();
-            if ($userVerifyEmail == null)
-            {
-                return response()->json(['error' => 'На данный момент невозможно изменить пароль, попробуйте перезагрузить страницу, если ошибка остаётся, то обратитесь в поддержку, Спасибо!',
-                    'status' => 400], 400);
+            if ($userVerifyEmail == null) {
+                return response()->json([
+                    'error' => 'На данный момент невозможно изменить пароль, попробуйте перезагрузить страницу, если ошибка остаётся, то обратитесь в поддержку, Спасибо!',
+                    'status' => 400,
+                ], 400);
             }
 
             $user = User::query()->where('email', $userVerifyEmail->user_email)->first();
-            if ($user == null)
-            {
-                return response()->json(['error' => 'На данный момент невозможно изменить пароль, попробуйте позже, если ошибка остаётся, то обратитесь в поддержку, Спасибо!',
-                    'status' => 400], 400);
+            if ($user == null) {
+                return response()->json([
+                    'error' => 'На данный момент невозможно изменить пароль, попробуйте позже, если ошибка остаётся, то обратитесь в поддержку, Спасибо!',
+                    'status' => 400,
+                ], 400);
             }
 
             /*
             @return Array $var['device', 'browser']
             @throws Json
             */
-            try
-            {
+            try {
                 //Берём информацию о девайсе и IP пользователя
                 $aboutDevice = $this->deviceInfo->getInfoAboutDevice();
-            }
-            catch (\Throwable)
-            {
-                return response()->json(['error' => 'Произошла ошибка при определении устройства, пожалуйста, попробуйте зайти на сайт с другого устройства, если ошибка остаётся, то обратитесь в поддержку, Спасибо!',
-                    'status' => 400], 400);
+            } catch (\Throwable) {
+                return response()->json([
+                    'error' => 'Произошла ошибка при определении устройства, пожалуйста, попробуйте зайти на сайт с другого устройства, если ошибка остаётся, то обратитесь в поддержку, Спасибо!',
+                    'status' => 400,
+                ], 400);
             }
 
             $token = $user->createToken('token');
 
-            DB::transaction(function () use($user, $request, $userVerifyEmail, $aboutDevice, $token)
-            {
+            DB::transaction(function () use ($user, $request, $userVerifyEmail, $aboutDevice, $token) {
                 $user->update(['password' => Hash::make($request->password)]);
 
                 $userVerifyEmail->delete();
@@ -494,7 +529,8 @@ class AuthController extends Controller
                 //Выше изменили пароль, теперь удаляем все сессии и токены к ним и создаём новые для нового входа с новым паролем
                 UserIp::query()->where('user_id', $user->id)->forceDelete();
 
-                PersonalAccessToken::query()->where('tokenable_id', $user->id)->where('id','!=', $token->accessToken->id)->delete();
+                PersonalAccessToken::query()->where('tokenable_id', $user->id)->where('id', '!=',
+                    $token->accessToken->id)->delete();
 
                 $newUserIp = new UserIp;
                 $newUserIp->user_id = $user->id;
@@ -507,18 +543,19 @@ class AuthController extends Controller
                 $newUserIp->save();
             });
 
-            return response()->json(['message' => 'Вы успешно изменили пароль от своей учётной записи! Все сессии доступов, были аннулированы. Теперь попробуйте войти с новым паролем.',
-                'status' => 200], 200);
-        }
-        catch (\Throwable)
-        {
-            if (isset($token))
-            {
+            return response()->json([
+                'message' => 'Вы успешно изменили пароль от своей учётной записи! Все сессии доступов, были аннулированы. Теперь попробуйте войти с новым паролем.',
+                'status' => 200,
+            ], 200);
+        } catch (\Throwable) {
+            if (isset($token)) {
                 PersonalAccessToken::query()->find($token->accessToken->id)->delete();
             }
 
-            return response()->json(['error' => 'Произошла ошибка во время изменения пароля, попробуйте перезагрузить страницу, если ошибка остаётся, то обратитесь в поддержку, Спасибо!',
-                'status' => 400], 400);
+            return response()->json([
+                'error' => 'Произошла ошибка во время изменения пароля, попробуйте перезагрузить страницу, если ошибка остаётся, то обратитесь в поддержку, Спасибо!',
+                'status' => 400,
+            ], 400);
         }
     }
 
@@ -528,40 +565,42 @@ class AuthController extends Controller
         try {
             //Проверяем по token, жива ли еще сессия, чтобы пользователь мог понять, успел он или нет сменить пароль.
             $user = User::query()->find($request->user()->id);
-            if ($user == null)
-            {
-                return response()->json(['error' => 'Произошла ошибка! Данная сессия была аннулирована. Пожалуйста, обратитесь в поддержку!',
-                    'status' => 400], 400);
+            if ($user == null) {
+                return response()->json([
+                    'error' => 'Произошла ошибка! Данная сессия была аннулирована. Пожалуйста, обратитесь в поддержку!',
+                    'status' => 400,
+                ], 400);
             }
 
-            if (!Hash::check($request->password, $user->password))
-            {
-                return response()->json(['warning' => 'Введён неверный старый пароль!',
-                    'status' => 400], 400);
+            if (!Hash::check($request->password, $user->password)) {
+                return response()->json([
+                    'warning' => 'Введён неверный старый пароль!',
+                    'status' => 400,
+                ], 400);
             }
 
-            DB::transaction(function () use ($request, $user)
-            {
+            DB::transaction(function () use ($request, $user) {
                 $user->update(['password' => Hash::make($request->newPassword)]);
 
                 //Выше изменили пароль, теперь удаляем все сессии и токены к ним кроме нынешней сессии и токена
                 $tokenId = stristr($request->bearerToken(), '|', true);
 
                 UserIp::query()->where('user_id', $user->id)
-                    ->where('token_id','!=', $tokenId)->forceDelete();
+                    ->where('token_id', '!=', $tokenId)->forceDelete();
 
                 PersonalAccessToken::query()->where('tokenable_id', $user->id)
-                    ->where('id','!=', $tokenId)->delete();
+                    ->where('id', '!=', $tokenId)->delete();
             });
 
-            return response()->json(['message' => 'Вы успешно изменили пароль от своей учётной записи! Все сессии доступов, кроме нынешнего, были аннулированы.',
-                'status' => 200], 200);
-        }
-        catch (\Throwable)
-        {
+            return response()->json([
+                'message' => 'Вы успешно изменили пароль от своей учётной записи! Все сессии доступов, кроме нынешнего, были аннулированы.',
+                'status' => 200,
+            ], 200);
+        } catch (\Throwable) {
             return response()->json([
                 'error' => 'Произошла ошибка во время изменения пароля. Попробуйте перезагрузить страницу, если ошибка остаётся, то обратитесь в поддержку, Спасибо!',
-                'status' => 400], 400);
+                'status' => 400,
+            ], 400);
         }
     }
 
